@@ -6,6 +6,7 @@ public enum ConfigDefaults {
     GUILD_ID("GuildId");
 
     private final String defaultValue;
+
     ConfigDefaults(String value) {
         this.defaultValue = value;
     }

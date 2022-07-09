@@ -2,11 +2,10 @@ package com.champ.minecord.listeners;
 
 import com.champ.minecord.Minecord;
 import com.champ.minecord.discord.DiscordJDAConnection;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatEventListener implements Listener {
@@ -22,6 +21,8 @@ public class ChatEventListener implements Listener {
                 .append(": ")
                 .append(message);
         // Just for a test run
-        DiscordJDAConnection.getTextChannel().sendMessage(builder).queue();
+        Bukkit.getScheduler().runTaskAsynchronously(Minecord.getPlugin(),
+                () -> DiscordJDAConnection.getTextChannel().sendMessage(builder).queue()
+        );
     }
 }
