@@ -2,6 +2,7 @@ package com.champ.minecord;
 
 import com.champ.minecord.discord.DiscordJDAConnection;
 import com.champ.minecord.listeners.ChatEventListener;
+import com.champ.minecord.listeners.JoinLeaveListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Minecord extends JavaPlugin {
@@ -19,6 +20,7 @@ public final class Minecord extends JavaPlugin {
         DiscordJDAConnection.InitiateConnection(this);
         // Listeners
         new ChatEventListener();
+        new JoinLeaveListener();
     }
 
     @Override
