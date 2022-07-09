@@ -1,6 +1,6 @@
 # Minecord
 
-Minecord is a simple Minecraft Plugin that connects the Minecraft Server in-game chat with a Discord channel so that message can be sent and rec
+Minecord is a simple Minecraft plugin that connects a Minecraft server's in-game chat with a Discord channel so that the messages can be interchanged between the two.
 
 ## Building
  To build Minecord, you need JDK 16 or higher installed on your system.
