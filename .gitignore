@@ -2,9 +2,10 @@
 .idea/
 .vscode/
 
-# Minecraft server folder (Dev)
+# Minecraft server folder (Development)
 server/
-src/main/resources/config.yml # Dont keep record of config after initial commit
+ # Don't keep track of config.yml until the project is finished
+/src/main/resources/config.yml
 
 *.iml
 *.ipr
