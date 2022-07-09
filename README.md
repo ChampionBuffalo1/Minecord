@@ -15,5 +15,6 @@ mvn clean install
 
 Minecord outputs the plugin as a [Fat Jar](https://imagej.net/develop/uber-jars)
 
-## Dependencies
+## Dependencies 
   * [JDA (Java Discord API)](https://mvnrepository.com/artifact/net.dv8tion/JDA)
+  * [SpigotMC API](https://hub.spigotmc.org/)
