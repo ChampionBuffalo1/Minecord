@@ -42,17 +42,17 @@ public class DiscordJDAConnection {
             .build()
             .awaitReady();
             
-	    String channelId = plugin.getConfig().getString("channelId");
-	    if (channelId == null || channelId.equalsIgnoreCase(ConfigDefaults.CHANNEL_ID.getDefault())) {
+	        String channelId = plugin.getConfig().getString("channelId");
+	        if (channelId == null || channelId.equalsIgnoreCase(ConfigDefaults.CHANNEL_ID.getDefault())) {
                 Bukkit.getLogger().log(Level.SEVERE, "Channel not found in config.yml, disabling plugin");
                 Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
                 return;
             }
             textChannel = jda.getTextChannelById(channelId);
-	    if (channelId == null) {
-		Bukkit.getLogger().log(Level.SEVERE, "Invalid channel Id provided in config.yml, disabling plugin");
-		Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
-	    }
+	        if (textChannel == null) {
+		        Bukkit.getLogger().log(Level.SEVERE, "Invalid channel Id provided in config.yml, disabling plugin");
+		        Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
+            }
 
             String guildId = plugin.getConfig().getString("guildId");
             if (guildId != null && !guildId.equalsIgnoreCase(ConfigDefaults.GUILD_ID.getDefault())) {
