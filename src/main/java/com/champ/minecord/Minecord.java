@@ -2,6 +2,7 @@ package com.champ.minecord;
 
 import com.champ.minecord.discord.DiscordJDAConnection;
 import com.champ.minecord.listeners.ChatEventListener;
+import com.champ.minecord.listeners.DeathListener;
 import com.champ.minecord.listeners.JoinLeaveListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,6 +22,7 @@ public final class Minecord extends JavaPlugin {
         // Listeners
         new ChatEventListener();
         new JoinLeaveListener();
+        new DeathListener();
     }
 
     @Override
