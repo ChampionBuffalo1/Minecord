@@ -10,8 +10,11 @@ import org.bukkit.ChatColor;
 public class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        //	System.out.println(event.getMessage().getContentRaw());
-        if (!event.isFromType(ChannelType.TEXT) || !event.getChannel().getId().equals(Minecord.getPlugin().getConfig().getString("channelId")) || event.getAuthor().isBot())
+        if (!event.isFromType(ChannelType.TEXT) || event.getAuthor().isBot() ||
+                !event.getChannel().getId()
+                .equals(Minecord.getPlugin()
+                .getConfig().getString("channelId"))
+            )
             return;
         String authorTag = event.getAuthor().getAsTag();
         String message = event.getMessage().getContentRaw();
