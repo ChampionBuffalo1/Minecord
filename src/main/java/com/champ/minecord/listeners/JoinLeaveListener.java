@@ -5,7 +5,6 @@ import com.champ.minecord.discord.DiscordJDAConnection;
 import com.champ.minecord.utility.ConfigDefaults;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -20,30 +19,33 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         TextChannel channel = DiscordJDAConnection.getTextChannel();
-        Player player = event.getPlayer();
-
+        String playerName = event.getPlayer().getDisplayName();
         String emoji = Minecord.getPlugin().getConfig().getString("emojis.join");
-        if (emoji == null)
+        if (emoji == null || emoji.length() == 0)
             emoji = ConfigDefaults.JOIN_EMOJI.getDefault();
-
-        channel.sendMessage(emoji)
-                .append(" "+player.getDisplayName())
-                .append(" has joined!")
-                .queue();
+        String finalEmoji = emoji;
+        Bukkit.getScheduler().runTaskAsynchronously(Minecord.getPlugin(), () ->
+                channel.sendMessage(finalEmoji).append(" ")
+                        .append(playerName)
+                        .append(" has joined!")
+                        .queue()
+        );
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         TextChannel channel = DiscordJDAConnection.getTextChannel();
-        Player player = event.getPlayer();
+        String playerName = event.getPlayer().getDisplayName();
 
         String emoji = Minecord.getPlugin().getConfig().getString("emojis.leave");
-        if (emoji == null)
+        if (emoji == null || emoji.length() == 0)
             emoji = ConfigDefaults.LEAVE_EMOJI.getDefault();
-
-        channel.sendMessage(emoji)
-                .append(" "+player.getDisplayName())
-                .append(" has left!")
-                .queue();
+        String finalEmoji = emoji;
+        Bukkit.getScheduler().runTaskAsynchronously(Minecord.getPlugin(), () ->
+                channel.sendMessage(finalEmoji).append(" ")
+                        .append(playerName)
+                        .append(" has left!")
+                        .queue()
+        );
     }
 }
