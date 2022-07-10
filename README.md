@@ -13,8 +13,8 @@ cd Minecord
 mvn clean install
 ```
 
-Minecord outputs the plugin as a [Fat Jar](https://imagej.net/develop/uber-jars)
+Minecord outputs the plugin as a [UberJar](https://imagej.net/develop/uber-jars)
 
 ## Dependencies 
-  * [JDA (Java Discord API)](https://mvnrepository.com/artifact/net.dv8tion/JDA)
+  * [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)
   * [SpigotMC API](https://hub.spigotmc.org/)
