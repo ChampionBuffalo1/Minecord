@@ -64,6 +64,7 @@ public class DiscordJDAConnection {
             Bukkit.getLogger().log(Level.SEVERE, "Interrupt encountered during bot login: " + except.getMessage());
             Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
         }
+        jda.addEventListener(new MessageListener());
     }
 
     private static String getHostIp() {
