@@ -37,7 +37,7 @@ public class DiscordJDAConnection {
                             CacheFlag.VOICE_STATE
                     )
                     .enableCache(CacheFlag.EMOJI, CacheFlag.STICKER)
-                    .setActivity(Activity.playing("Minecraft at " + getHostIp()))
+                    .setActivity(Activity.playing("Minecraft" + (plugin.getConfig().getBoolean("showIp") ? " at " + getHostIp() : "")))
                     .build()
                     .awaitReady();
 
