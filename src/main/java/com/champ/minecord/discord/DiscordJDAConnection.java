@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.Bukkit;
 
@@ -24,19 +25,21 @@ public class DiscordJDAConnection {
 
         if (token == null || token.equalsIgnoreCase(ConfigDefaults.TOKEN.getDefault())) {
             Bukkit.getLogger().log(Level.SEVERE, "Bot Token not found in config.yml, disabling plugin");
-            Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
+            Bukkit.getPluginManager().disablePlugin(plugin);
             return; // Maybe redundant?
         }
+        String guildId = plugin.getConfig().getString("guildId");
         try {
-            DiscordJDAConnection.jda = JDABuilder.createDefault(token,
+            DiscordJDAConnection.jda = JDABuilder.create(token,
                             GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-                            GatewayIntent.GUILD_MESSAGES)
-                    .disableCache(
-                            CacheFlag.CLIENT_STATUS,
-                            CacheFlag.MEMBER_OVERRIDES,
-                            CacheFlag.VOICE_STATE
+                            GatewayIntent.GUILD_MESSAGES,
+                            GatewayIntent.GUILD_MEMBERS
                     )
+                    .setChunkingFilter(ChunkingFilter.NONE)
+                    .setMemberCachePolicy(member -> member.getGuild().getId().equals(guildId))
                     .enableCache(CacheFlag.EMOJI, CacheFlag.STICKER)
+                    .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, 
+                                  CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS)
                     .setActivity(Activity.playing("Minecraft" + (plugin.getConfig().getBoolean("showIp") ? " at " + getHostIp() : "")))
                     .build()
                     .awaitReady();
@@ -48,14 +51,15 @@ public class DiscordJDAConnection {
                 Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
                 return;
             }
-
-            String guildId = plugin.getConfig().getString("guildId");
-            if (guildId != null && !guildId.equalsIgnoreCase(ConfigDefaults.GUILD_ID.getDefault())) {
-                guild = jda.getGuildById(guildId);
-                // Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                //    DiscordJDAConnection.guild.retrieveEmojis();
-                //    DiscordJDAConnection.guild.retrieveStickers();
-                // });
+            guild = jda.getGuildById(guildId);
+            if (guild == null) {
+                Bukkit.getLogger().log(Level.SEVERE, "Guild Id not found in config.yml which is used for caching");
+                Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
+            } else {
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+//                    DiscordJDAConnection.guild.retrieveEmojis();
+//                    DiscordJDAConnection.guild.retrieveStickers();
+                });
             }
         } catch (LoginException except) {
             Bukkit.getLogger().log(Level.SEVERE, "Exception encountered during login: " + except.getMessage());
