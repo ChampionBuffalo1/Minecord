@@ -1,6 +1,5 @@
 package com.champ.minecord.discord;
 
-import com.champ.minecord.Minecord;
 import com.champ.minecord.utility.ConfigDefaults;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -48,13 +47,13 @@ public class DiscordJDAConnection {
             textChannel = jda.getTextChannelById(channelId);
             if (textChannel == null) {
                 Bukkit.getLogger().log(Level.SEVERE, "TextChannel not found using the id provided in config.yml, disabling plugin");
-                Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
+                Bukkit.getPluginManager().disablePlugin(plugin);
                 return;
             }
             guild = jda.getGuildById(guildId);
             if (guild == null) {
                 Bukkit.getLogger().log(Level.SEVERE, "Guild Id not found in config.yml which is used for caching");
-                Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
+                Bukkit.getPluginManager().disablePlugin(plugin);
             } else {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 //                    DiscordJDAConnection.guild.retrieveEmojis();
@@ -63,10 +62,10 @@ public class DiscordJDAConnection {
             }
         } catch (LoginException except) {
             Bukkit.getLogger().log(Level.SEVERE, "Exception encountered during login: " + except.getMessage());
-            Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
+            Bukkit.getPluginManager().disablePlugin(plugin);
         } catch (InterruptedException except) {
             Bukkit.getLogger().log(Level.SEVERE, "Interrupt encountered during bot login: " + except.getMessage());
-            Bukkit.getPluginManager().disablePlugin(Minecord.getPlugin());
+            Bukkit.getPluginManager().disablePlugin(plugin);
         }
         jda.addEventListener(new MessageListener());
     }
