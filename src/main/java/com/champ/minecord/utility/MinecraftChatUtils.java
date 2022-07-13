@@ -58,9 +58,8 @@ public class MinecraftChatUtils {
             Stream<Member> memStream = DiscordJDAConnection.getGuild().getMemberCache()
                     .parallelStream()
                     // Removing all members whose name's length is less than what was provided for search
-                    .filter(member -> member.getUser().getName().length() >= name.length())
                     // Removing anyone whose name doesn't startsWith the name we are looking for
-                    .filter(member -> member.getUser().getName().toLowerCase().startsWith(name));
+                    .filter(member -> member.getUser().getName().length() >= name.length() && member.getUser().getName().toLowerCase().startsWith(name));
             if (memStream.findAny().isEmpty())
                 return matchResult.group();
             if (memStream.count() == 1 && memStream.findFirst().isPresent())
