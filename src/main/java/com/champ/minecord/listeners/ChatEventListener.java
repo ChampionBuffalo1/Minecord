@@ -2,6 +2,7 @@ package com.champ.minecord.listeners;
 
 import com.champ.minecord.Minecord;
 import com.champ.minecord.discord.DiscordJDAConnection;
+import com.champ.minecord.utility.MinecraftChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -23,7 +24,9 @@ public class ChatEventListener implements Listener {
                 .append(message);
         // Just for a test run
         Bukkit.getScheduler().runTaskAsynchronously(Minecord.getPlugin(),
-                () -> DiscordJDAConnection.getTextChannel().sendMessage(builder).queue()
+                () -> DiscordJDAConnection.getTextChannel()
+                        .sendMessage(MinecraftChatUtils.inject(builder))
+                        .queue()
         );
     }
 }
