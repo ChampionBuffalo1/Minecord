@@ -13,6 +13,7 @@ public class DiscordChatUtils {
     private final static Pattern mentionPattern = Pattern.compile("<@!?(\\d{15,22})>");
     private final static Pattern roleMentionPattern = Pattern.compile("<@&(\\d{15,22})>");
     private final static Pattern channelMention = Pattern.compile("<#(\\d{15,22})>");
+
     /**
      * Removes discord specific things from message
      *
@@ -33,11 +34,11 @@ public class DiscordChatUtils {
     public static String removeEmotes(String input) {
         Matcher match = emotePattern.matcher(input);
         if (!match.find()) return input;
-        return match.replaceAll("$1");
+        return match.replaceAll("$1"); // $1 is the first group of the regex
     }
 
     /**
-     * @param input
+     * @param input Input String
      * @return Properly "cleaned" message string
      */
     public static String removeMentions(String input) {
@@ -48,8 +49,8 @@ public class DiscordChatUtils {
         String id = match.group(1);
         String toReplaceWith = "@invalid-user";
         Member member = DiscordJDAConnection.getGuild().getMemberById(id);
-	if (member != null)
-	  toReplaceWith = "@" + member.getUser().getName();
+        if (member != null)
+            toReplaceWith = "@" + member.getUser().getName();
         return match.replaceAll(toReplaceWith);
     }
 
