@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public class MinecraftChatUtils {
     private final static Pattern simpleEmote = Pattern.compile(":(\\w+):");
     private final static Pattern simpleChannel = Pattern.compile("#([a-z\\d-]+)");
-    private final static Pattern simpleMember = Pattern.compile("@([\\w\\d#]+)");
+    private final static Pattern simpleMember = Pattern.compile("@([\\w\\d]+)");
 
     public static String inject(StringBuilder builder) {
         return inject(builder.toString());
