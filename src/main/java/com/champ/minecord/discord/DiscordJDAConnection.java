@@ -2,25 +2,18 @@ package com.champ.minecord.discord;
 
 import com.champ.minecord.Minecord;
 import com.champ.minecord.utility.ConfigDefaults;
+import com.champ.minecord.utility.PluginLogger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.sticker.GuildSticker;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.bukkit.Bukkit;
 
 import javax.security.auth.login.LoginException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-
 
 public class DiscordJDAConnection {
-    private final static ConcurrentHashMap<String, String> emotes = new ConcurrentHashMap<>();
-    private final static ConcurrentHashMap<String, GuildSticker> stickers = new ConcurrentHashMap<>();
     private static JDA jda = null;
     private static Guild guild = null;
     private static TextChannel textChannel = null;
@@ -29,8 +22,7 @@ public class DiscordJDAConnection {
         String token = plugin.getConfig().getString("token");
 
         if (token == null || token.equalsIgnoreCase(ConfigDefaults.TOKEN.getDefault())) {
-            plugin.getLogger().log(Level.SEVERE, "Bot Token not found in config.yml, disabling plugin");
-            Bukkit.getPluginManager().disablePlugin(plugin);
+            PluginLogger.unrecoverable("Bot Token not found in config.yml, disabling plugin");
             return; // Maybe redundant?
         }
         String guildId = plugin.getConfig().getString("guildId");
@@ -40,7 +32,6 @@ public class DiscordJDAConnection {
                             GatewayIntent.GUILD_MESSAGES,
                             GatewayIntent.GUILD_MEMBERS
                     )
-                    .setChunkingFilter(ChunkingFilter.NONE)
                     .setMemberCachePolicy(member -> member.getGuild().getId().equals(guildId))
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE,
                             CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS)
@@ -50,45 +41,26 @@ public class DiscordJDAConnection {
 
             String channelId = plugin.getConfig().getString("channelId");
             textChannel = jda.getTextChannelById(channelId);
-            if (textChannel == null) {
-                plugin.getLogger().log(Level.SEVERE, "TextChannel not found using the id provided in config.yml, disabling plugin");
-                Bukkit.getPluginManager().disablePlugin(plugin);
-                return;
-            }
+            if (textChannel == null)
+                PluginLogger.unrecoverable("TextChannel not found using the id provided in config.yml, disabling plugin");
+
             guild = jda.getGuildById(guildId);
-            if (guild == null) {
-                plugin.getLogger().log(Level.SEVERE, "Guild Id not found in config.yml which is used for caching");
-                Bukkit.getPluginManager().disablePlugin(plugin);
-            } else {
-                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    plugin.getLogger().info("Retrieving sticker and emotes from guild");
-                    DiscordJDAConnection.guild.retrieveEmojis()
-                            .queue(emoteList -> emoteList.parallelStream()
-                                    .forEach(emote ->
-                                            emotes.put(emote.getName().toLowerCase(), emote.getFormatted())
-                                    )
-                            );
-                    DiscordJDAConnection.guild.retrieveStickers().
-                            queue(stickerList -> stickerList.parallelStream()
-                                    .forEach(sticker -> stickers.put(sticker.getName().toLowerCase(), sticker)
-                                    )
-                            );
-                });
-            }
+            if (guild == null)
+                PluginLogger.unrecoverable("Guild Id not found in config.yml which is used for caching");
+            else
+                EntityCache.Setup(guild);
         } catch (LoginException except) {
-            plugin.getLogger().log(Level.SEVERE, "Exception encountered during login: " + except.getMessage());
-            Bukkit.getPluginManager().disablePlugin(plugin);
+            PluginLogger.unrecoverable("Exception encountered during login: " + except.getMessage());
         } catch (InterruptedException except) {
-            plugin.getLogger().log(Level.SEVERE, "Interrupt encountered during bot login: " + except.getMessage());
-            Bukkit.getPluginManager().disablePlugin(plugin);
+            PluginLogger.unrecoverable("Interrupt encountered during bot login: " + except.getMessage());
         }
         jda.addEventListener(new MessageListener());
     }
 
     private static String getHostIp() {
         String ip = "localhost";
-        if (Bukkit.getIp().length() != 0)
-            ip = Bukkit.getIp();
+        if (org.bukkit.Bukkit.getIp().length() != 0)
+            ip = org.bukkit.Bukkit.getIp();
         return ip;
     }
 
@@ -102,13 +74,5 @@ public class DiscordJDAConnection {
 
     public static Guild getGuild() {
         return guild;
-    }
-
-    public static String getEmote(String name) {
-        return emotes.get(name);
-    }
-
-    public static GuildSticker getStickers(String Id) {
-        return stickers.get(Id);
     }
 }
