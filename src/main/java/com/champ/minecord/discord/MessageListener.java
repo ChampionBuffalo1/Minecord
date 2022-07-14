@@ -9,7 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class MessageListener extends ListenerAdapter {
-    private final static String channelId = Minecord.getPlugin().getConfig().getString("channelId")
+    private final static String channelId = Minecord.getPlugin().getConfig().getString("channelId");
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromType(ChannelType.TEXT) || event.getAuthor().isBot() ||
