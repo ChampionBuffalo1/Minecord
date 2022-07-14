@@ -15,7 +15,7 @@ public class MessageListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromType(ChannelType.TEXT) || event.getAuthor().isBot() ||
                 !event.getChannel().getId().equals(channelId)
-           )
+        )
             return;
         String authorTag = event.getAuthor().getAsTag();
         String message = DiscordChatUtils.cleanMessage(event.getMessage().getContentRaw());

@@ -10,12 +10,13 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class DeathListener implements Listener {
     public DeathListener() {
-        Bukkit.getPluginManager().registerEvents(this, Minecord.getPlugin());
+        Minecord.getPlugin().registerListener(this);
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         String message = event.getDeathMessage();
+        if (message == null) return;
         String emoji = Minecord.getPlugin().getConfig().getString("emojis.death");
         if (emoji == null || emoji.length() == 0)
             emoji = ConfigDefaults.DEATH_EMOJI.getDefault();

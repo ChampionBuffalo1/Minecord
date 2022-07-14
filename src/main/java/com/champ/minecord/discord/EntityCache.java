@@ -1,10 +1,10 @@
 package com.champ.minecord.discord;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.champ.minecord.utility.PluginLogger;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.sticker.GuildSticker;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityCache {
     private final static ConcurrentHashMap<String, String> emotes = new ConcurrentHashMap<>();
@@ -27,9 +27,11 @@ public class EntityCache {
     public static String getEmote(String emoteName) {
         return emotes.get(emoteName);
     }
+
     public static String getEmoteOrElse(String emoteName, String orElse) {
-       return emotes.getOrDefault(emoteName, orElse);
+        return emotes.getOrDefault(emoteName, orElse);
     }
+
     public static GuildSticker getSticker(String emoteName) {
         return stickers.get(emoteName);
     }

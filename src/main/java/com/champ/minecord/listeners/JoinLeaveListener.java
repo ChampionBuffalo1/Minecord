@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class JoinLeaveListener implements Listener {
 
     public JoinLeaveListener() {
-        Bukkit.getPluginManager().registerEvents(this, Minecord.getPlugin());
+        Minecord.getPlugin().registerListener(this);
     }
 
     @EventHandler

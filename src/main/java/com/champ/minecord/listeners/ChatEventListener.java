@@ -12,7 +12,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatEventListener implements Listener {
     public ChatEventListener() {
-        Bukkit.getPluginManager().registerEvents(this, Minecord.getPlugin());
+        Minecord.getPlugin().registerListener(this);
     }
 
     @EventHandler
