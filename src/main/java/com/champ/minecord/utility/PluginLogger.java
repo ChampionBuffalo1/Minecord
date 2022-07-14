@@ -12,16 +12,20 @@ public class PluginLogger {
     public static void info(String message) {
         pluginLogger.info(message);
     }
+
     public static void warn(String message) {
         log(Level.WARNING, message);
     }
+
     public static void severe(String message) {
         log(Level.SEVERE, message);
     }
+
     public static void unrecoverable(String message) {
         log(Level.SEVERE, message);
         plugin.disableSelf();
     }
+
     public static void log(Level level, String message) {
         pluginLogger.log(level, message);
     }
