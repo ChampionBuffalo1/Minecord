@@ -4,7 +4,9 @@ import com.champ.minecord.discord.DiscordJDAConnection;
 import com.champ.minecord.listeners.ChatEventListener;
 import com.champ.minecord.listeners.DeathListener;
 import com.champ.minecord.listeners.JoinLeaveListener;
+import com.champ.minecord.listeners.ServerEvents;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Minecord extends JavaPlugin {
@@ -21,19 +23,27 @@ public final class Minecord extends JavaPlugin {
         saveDefaultConfig();
         DiscordJDAConnection.InitiateConnection(this);
         // Listeners
+        new ServerEvents();
+        new DeathListener();
         new ChatEventListener();
         new JoinLeaveListener();
-        new DeathListener();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
         // Properly Shutdown JDA connection
-        if (DiscordJDAConnection.getJda() != null)
+        if (DiscordJDAConnection.getJda() != null) {
+            ServerEvents.serverShutdown();
             DiscordJDAConnection.getJda().shutdownNow();
+        }
     }
+
     public void disableSelf() {
         Bukkit.getPluginManager().disablePlugin(this);
+    }
+
+    public void registerListener(Listener listener) {
+        Bukkit.getPluginManager().registerEvents(listener, this);
     }
 }
