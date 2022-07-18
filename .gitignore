@@ -4,8 +4,8 @@
 
 # Minecraft server folder (Development)
 server/
- # Don't keep track of config.yml until the project is finished
-/src/main/resources/config.yml
+# Don't keep track of config.yml until the project is finished
+# /src/main/resources/config.yml
 
 *.iml
 *.ipr

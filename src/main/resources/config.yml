@@ -1,0 +1,21 @@
+# Bot to login into discord with
+token: BotToken
+# Whether to use webhook for sending message or not, if enabled make sure to provide webhookURL
+useWebhook: false
+webhookURL: WebhookURL
+# Channel ID to send the messages in
+channelId: ChannelId
+# Server ID
+guildId: GuildId
+# Whether to show server Ip address in bots activity
+showIp: false
+# Emojis Used in messages
+emojis:
+  advancement: ":medal:"
+  join: ":arrow_right:"
+  leave: ":arrow_left:"
+  death: ":skull:"
+  server:
+    start: ":white_check_mark:"
+    reload: ":arrows_clockwise:"
+    stop: ":octagonal_sign:"
