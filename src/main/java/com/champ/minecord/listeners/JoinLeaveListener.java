@@ -1,10 +1,9 @@
 package com.champ.minecord.listeners;
 
 import com.champ.minecord.Minecord;
+import com.champ.minecord.Settings;
 import com.champ.minecord.discord.DiscordJDAConnection;
 import com.champ.minecord.utility.ConfigDefaults;
-import net.dv8tion.jda.api.entities.TextChannel;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,35 +18,23 @@ public class JoinLeaveListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        TextChannel channel = DiscordJDAConnection.getTextChannel();
         String playerName = ChatColor.stripColor(event.getPlayer().getDisplayName());
 
-        String emoji = Minecord.getPlugin().getConfig().getString("emojis.join");
-        if (emoji == null || emoji.length() == 0)
-            emoji = ConfigDefaults.JOIN_EMOJI.getDefault();
-        String finalEmoji = emoji;
-        Bukkit.getScheduler().runTaskAsynchronously(Minecord.getPlugin(), () ->
-                channel.sendMessage(finalEmoji).append(" ")
-                        .append(playerName)
-                        .append(" has joined!")
-                        .queue()
-        );
+        String emoji = Settings.getEmote("emojis.join").orElse(ConfigDefaults.JOIN_EMOJI.getDefault());
+        String message = emoji + " " +
+                playerName +
+                " has joined!";
+        DiscordJDAConnection.sendMessage(message, event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
-        TextChannel channel = DiscordJDAConnection.getTextChannel();
         String playerName = ChatColor.stripColor(event.getPlayer().getDisplayName());
 
-        String emoji = Minecord.getPlugin().getConfig().getString("emojis.leave");
-        if (emoji == null || emoji.length() == 0)
-            emoji = ConfigDefaults.LEAVE_EMOJI.getDefault();
-        String finalEmoji = emoji;
-        Bukkit.getScheduler().runTaskAsynchronously(Minecord.getPlugin(), () ->
-                channel.sendMessage(finalEmoji).append(" ")
-                        .append(playerName)
-                        .append(" has left!")
-                        .queue()
-        );
+        String emoji = Settings.getEmote("emojis.leave").orElse(ConfigDefaults.LEAVE_EMOJI.getDefault());
+        String message = emoji + " " +
+                playerName +
+                " has left!";
+        DiscordJDAConnection.sendMessage(message, event.getPlayer());
     }
 }

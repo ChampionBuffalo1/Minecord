@@ -2,8 +2,9 @@ package com.champ.minecord.utility;
 
 public enum ConfigDefaults {
     TOKEN("BotToken"),
-    // CHANNEL_ID("ChannelId"),
-    // GUILD_ID("GuildId"),
+    CHANNEL_ID("ChannelId"),
+    GUILD_ID("GuildId"),
+    ADVANCEMENT_EMOJI(":medal:"),
     JOIN_EMOJI(":arrow_right:"),
     LEAVE_EMOJI(":arrow_left:"),
     DEATH_EMOJI(":skull:"),

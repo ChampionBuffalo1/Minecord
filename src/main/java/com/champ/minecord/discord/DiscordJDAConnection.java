@@ -1,7 +1,9 @@
 package com.champ.minecord.discord;
 
-import com.champ.minecord.Minecord;
-import com.champ.minecord.utility.ConfigDefaults;
+import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.WebhookClientBuilder;
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import com.champ.minecord.Settings;
 import com.champ.minecord.utility.PluginLogger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -10,6 +12,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.bukkit.entity.Player;
 
 import javax.security.auth.login.LoginException;
 
@@ -17,15 +20,14 @@ public class DiscordJDAConnection {
     private static JDA jda = null;
     private static Guild guild = null;
     private static TextChannel textChannel = null;
+    private static WebhookClient webhook = null;
 
-    public static void InitiateConnection(Minecord plugin) {
-        String token = plugin.getConfig().getString("token");
-
-        if (token == null || token.equalsIgnoreCase(ConfigDefaults.TOKEN.getDefault())) {
+    public static void InitiateConnection() {
+        String token = Settings.getBotToken().orElseThrow(() -> {
             PluginLogger.unrecoverable("Bot Token not found in config.yml, disabling plugin");
-            return; // Maybe redundant?
-        }
-        String guildId = plugin.getConfig().getString("guildId");
+            return new IllegalArgumentException();
+        });
+        String guildId = Settings.getGuildId().orElseThrow(IllegalArgumentException::new);
         try {
             DiscordJDAConnection.jda = JDABuilder.create(token,
                             GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
@@ -35,11 +37,11 @@ public class DiscordJDAConnection {
                     .setMemberCachePolicy(member -> member.getGuild().getId().equals(guildId))
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE,
                             CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS)
-                    .setActivity(Activity.playing("Minecraft" + (plugin.getConfig().getBoolean("showIp") ? " at " + getHostIp() : "")))
+                    .setActivity(Activity.playing("Minecraft" + (Settings.getShowIp() ? " at " + getHostIp() : "")))
                     .build()
                     .awaitReady();
 
-            String channelId = plugin.getConfig().getString("channelId");
+            String channelId = Settings.getChannelId().orElseThrow(IllegalArgumentException::new);
             textChannel = jda.getTextChannelById(channelId);
             if (textChannel == null)
                 PluginLogger.unrecoverable("TextChannel not found using the id provided in config.yml, disabling plugin");
@@ -53,6 +55,12 @@ public class DiscordJDAConnection {
             PluginLogger.unrecoverable("Exception encountered during login: " + except.getMessage());
         } catch (InterruptedException except) {
             PluginLogger.unrecoverable("Interrupt encountered during bot login: " + except.getMessage());
+        }
+        if (Settings.useWebhook()) {
+            WebhookClientBuilder wb = new WebhookClientBuilder(Settings.getWebhookURL().orElseThrow(IllegalArgumentException::new));
+            wb.setHttpClient(jda.getHttpClient());
+            wb.setWait(false); // We don't care about the message returned
+            webhook = wb.buildJDA();
         }
         jda.addEventListener(new MessageListener());
     }
@@ -74,5 +82,20 @@ public class DiscordJDAConnection {
 
     public static Guild getGuild() {
         return guild;
+    }
+
+    private static void sendWebhookMessage(String msg, Player player) {
+        WebhookMessageBuilder message = new WebhookMessageBuilder()
+                .setContent(msg)
+                .setUsername(player.getName())
+                .setAvatarUrl(Settings.getPlayerAvatarURL(player.getUniqueId().toString()));
+        webhook.send(message.build());
+    }
+
+    public static void sendMessage(String message, Player player) {
+        if (Settings.useWebhook())
+            sendWebhookMessage(message, player);
+        else
+            textChannel.sendMessage(message).queue();
     }
 }

@@ -1,6 +1,6 @@
 package com.champ.minecord.discord;
 
-import com.champ.minecord.Minecord;
+import com.champ.minecord.Settings;
 import com.champ.minecord.utility.DiscordChatUtils;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class MessageListener extends ListenerAdapter {
-    private final static String channelId = Minecord.getPlugin().getConfig().getString("channelId");
+    private final static String channelId = Settings.getChannelId().orElseThrow();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
