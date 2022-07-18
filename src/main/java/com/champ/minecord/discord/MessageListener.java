@@ -19,12 +19,11 @@ public class MessageListener extends ListenerAdapter {
             return;
         String authorTag = event.getAuthor().getAsTag();
         String message = DiscordChatUtils.cleanMessage(event.getMessage().getContentRaw());
-        StringBuilder builder = new StringBuilder(ChatColor.BLUE + "[#")
-                .append(event.getChannel().getName())
-                .append("] ")
-                .append(authorTag)
-                .append(": " + ChatColor.WHITE).append(message);
-        String str = builder.toString();
+        String str = ChatColor.GOLD + "[#" +
+                event.getChannel().getName() +
+                "] " + ChatColor.DARK_AQUA +
+                authorTag +
+                ChatColor.GRAY + ": " + ChatColor.WHITE + message;
         if (str.length() >= 256) // 256 is the server chat's character limit
             str = str.substring(0, 256);
 
