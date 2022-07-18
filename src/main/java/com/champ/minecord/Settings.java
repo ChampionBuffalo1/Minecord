@@ -58,6 +58,7 @@ public class Settings {
     public static String getPlayerAvatarURL(String uuid) {
         return String.format("https://crafthead.net/helm/%s", uuid);
     }
+
     private static boolean commonErrors(String toCheck) {
         return toCheck == null || toCheck.length() == 0;
     }
