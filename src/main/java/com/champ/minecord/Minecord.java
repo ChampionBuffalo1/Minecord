@@ -1,10 +1,7 @@
 package com.champ.minecord;
 
 import com.champ.minecord.discord.DiscordJDAConnection;
-import com.champ.minecord.listeners.ChatEventListener;
-import com.champ.minecord.listeners.DeathListener;
-import com.champ.minecord.listeners.JoinLeaveListener;
-import com.champ.minecord.listeners.ServerEvents;
+import com.champ.minecord.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,12 +18,14 @@ public final class Minecord extends JavaPlugin {
         plugin = this;
         getConfig().options().copyDefaults();
         saveDefaultConfig();
-        DiscordJDAConnection.InitiateConnection(this);
+        new Settings();
+        DiscordJDAConnection.InitiateConnection();
         // Listeners
         new ServerEvents();
         new DeathListener();
         new ChatEventListener();
         new JoinLeaveListener();
+        new AdvancementListener();
     }
 
     @Override
