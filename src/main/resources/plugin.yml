@@ -1,9 +1,8 @@
 name: Minecord
 version: '${project.version}'
 main: com.champ.minecord.Minecord
-api-version: 1.13
+api-version: 1.17
 prefix: com.champ.minecord
 authors: [ ChampionBuffalo1 ]
 description: Just a simple minecraft plugin to connect minecraft chat with a discord channel and a simple math command
-website: https://github.com/ChampionBuffalo1
-
+website: https://github.com/ChampionBuffalo1/Minecord
