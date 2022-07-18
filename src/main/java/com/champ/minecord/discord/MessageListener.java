@@ -18,14 +18,14 @@ public class MessageListener extends ListenerAdapter {
         )
             return;
         String authorTag = event.getAuthor().getAsTag();
-        String message = DiscordChatUtils.cleanMessage(event.getMessage().getContentRaw());
+        String message = DiscordChatUtils.cleanMessage(event.getMessage());
         String str = ChatColor.GOLD + "[#" +
                 event.getChannel().getName() +
                 "] " + ChatColor.DARK_AQUA +
                 authorTag +
                 ChatColor.GRAY + ": " + ChatColor.WHITE + message;
-        if (str.length() >= 256) // 256 is the server chat's character limit
-            str = str.substring(0, 256);
+        if (str.length() >= DiscordChatUtils.maxMCMessageLength + 1) // 256 is the server chat's character limit
+            str = str.substring(0, DiscordChatUtils.maxMCMessageLength + 1);
 
         Bukkit.getServer().broadcastMessage(str);
     }

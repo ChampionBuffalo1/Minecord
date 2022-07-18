@@ -3,12 +3,17 @@ package com.champ.minecord.utility;
 import com.champ.minecord.discord.DiscordJDAConnection;
 import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.sticker.StickerItem;
+import org.bukkit.ChatColor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DiscordChatUtils {
+    // 256 (exclusive) is the max number of characters allowed in minecraft chat
+    public final static short maxMCMessageLength = 256 - 1;
     private final static Pattern emotePattern = Pattern.compile("<(:\\w+:)(\\d{15,22})>");
     private final static Pattern mentionPattern = Pattern.compile("<@!?(\\d{15,22})>");
     private final static Pattern roleMentionPattern = Pattern.compile("<@&(\\d{15,22})>");
@@ -17,12 +22,33 @@ public class DiscordChatUtils {
     /**
      * Removes discord specific things from message
      *
-     * @param discordMessage Input String to clean
+     * @param message Message to clean
      * @return Properly "cleaned" message string
      */
-    public static String cleanMessage(String discordMessage) {
-        String withoutEmotes = removeEmotes(discordMessage);
-        return removeMentions(withoutEmotes);
+    public static String cleanMessage(Message message) {
+        String rawMessage = message.getContentRaw();
+        String withoutEmotes = removeEmotes(rawMessage);
+        String afterCleaning = removeMentions(withoutEmotes);
+        if (afterCleaning.length() <= maxMCMessageLength)
+            return tryAddOtherMeta(afterCleaning, message);
+        return afterCleaning;
+    }
+
+    public static String tryAddOtherMeta(String processedMessage, Message msg) {
+        StringBuilder builder = new StringBuilder(processedMessage);
+        for (Message.Attachment attachment : msg.getAttachments()) {
+            String toAppend = "\n" + ChatColor.ITALIC + "[Attachment]: " + attachment.getUrl();
+            if (toAppend.length() + builder.length() >= maxMCMessageLength)
+                return builder.toString();
+            builder.append(toAppend);
+        }
+        for (StickerItem sticker : msg.getStickers()) {
+            String toAppend = "\n" + ChatColor.ITALIC + "[Sticker]: " + sticker.getName();
+            if (toAppend.length() + builder.length() >= maxMCMessageLength)
+                return builder.toString();
+            builder.append(toAppend);
+        }
+        return builder.toString();
     }
 
     /**
@@ -74,15 +100,5 @@ public class DiscordChatUtils {
         if (channel != null)
             toReplaceWith = "#" + channel.getName();
         return match.replaceAll(toReplaceWith);
-    }
-
-    /**
-     * StringBuilder overload for cleanMessage method
-     *
-     * @param messageBuilder
-     * @return Properly "cleaned" message string
-     */
-    public static String cleanMessage(StringBuilder messageBuilder) {
-        return cleanMessage(messageBuilder.toString());
     }
 }
