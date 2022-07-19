@@ -29,7 +29,7 @@ public class DiscordChatUtils {
         String rawMessage = message.getContentRaw();
         String withoutEmotes = removeEmotes(rawMessage);
         String afterCleaning = removeMentions(withoutEmotes);
-        if (afterCleaning.length() <= maxMCMessageLength)
+        if (afterCleaning.length() < maxMCMessageLength)
             return tryAddOtherMeta(afterCleaning, message);
         return afterCleaning;
     }

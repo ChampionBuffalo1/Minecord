@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class JoinLeaveListener implements Listener {
@@ -37,4 +38,11 @@ public class JoinLeaveListener implements Listener {
                 " has left!";
         DiscordJDAConnection.sendMessage(message, event.getPlayer());
     }
+    @EventHandler
+    public void onPlayerKick(PlayerKickEvent event) {
+        String playerName = ChatColor.stripColor(event.getPlayer().getDisplayName());
+        String message = playerName + " was kicked with reason: "+ event.getReason();
+        DiscordJDAConnection.sendMessage(message, event.getPlayer());
+    }
+
 }
