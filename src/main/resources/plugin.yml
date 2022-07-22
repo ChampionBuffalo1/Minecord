@@ -6,3 +6,7 @@ prefix: com.champ.minecord
 authors: [ ChampionBuffalo1 ]
 description: Just a simple minecraft plugin to connect minecraft chat with a discord channel and a simple math command
 website: https://github.com/ChampionBuffalo1/Minecord
+commands:
+  sticker:
+    description: Send sticker from the bot
+    usage: /<command> <sticker>
