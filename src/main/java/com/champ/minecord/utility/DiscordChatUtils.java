@@ -1,6 +1,6 @@
 package com.champ.minecord.utility;
 
-import com.champ.minecord.discord.DiscordJDAConnection;
+import com.champ.minecord.discord.JdaConnection;
 import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -74,7 +74,7 @@ public class DiscordChatUtils {
         if (!match.find()) return withoutRoleMention;
         String id = match.group(1);
         String toReplaceWith = "@invalid-user";
-        Member member = DiscordJDAConnection.getGuild().getMemberById(id);
+        Member member = JdaConnection.getGuild().getMemberById(id);
         if (member != null)
             toReplaceWith = "@" + member.getUser().getName();
         return match.replaceAll(toReplaceWith);
@@ -85,7 +85,7 @@ public class DiscordChatUtils {
         if (!match.find()) return input;
         String id = match.group(1);
         String toReplaceWith = "deleted-role";
-        Role role = DiscordJDAConnection.getGuild().getRoleById(id);
+        Role role = JdaConnection.getGuild().getRoleById(id);
         if (role != null)
             toReplaceWith = "@" + role.getName();
         return match.replaceAll(toReplaceWith);
@@ -96,7 +96,7 @@ public class DiscordChatUtils {
         if (!match.find()) return input;
         String id = match.group(1);
         String toReplaceWith = "#deleted-channel";
-        Channel channel = DiscordJDAConnection.getGuild().getChannelById(Channel.class, id);
+        Channel channel = JdaConnection.getGuild().getChannelById(Channel.class, id);
         if (channel != null)
             toReplaceWith = "#" + channel.getName();
         return match.replaceAll(toReplaceWith);

@@ -1,7 +1,7 @@
 package com.champ.minecord.utility;
 
-import com.champ.minecord.discord.DiscordJDAConnection;
 import com.champ.minecord.discord.EntityCache;
+import com.champ.minecord.discord.JdaConnection;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.utils.cache.MemberCacheView;
@@ -39,7 +39,7 @@ public class MinecraftChatUtils {
         if (!match.find()) return inputString;
         return match.replaceAll(matchResult -> {
             String name = matchResult.group(1);
-            List<TextChannel> channels = DiscordJDAConnection.getGuild().getTextChannelsByName(name, true);
+            List<TextChannel> channels = JdaConnection.getGuild().getTextChannelsByName(name, true);
             if (channels.isEmpty()) return matchResult.group();
             return channels.get(0).getAsMention();
         });
@@ -48,7 +48,7 @@ public class MinecraftChatUtils {
     public static String injectMemberMentions(String inputString) {
         Matcher match = simpleMember.matcher(inputString);
         if (!match.find()) return inputString;
-        MemberCacheView cacheView = DiscordJDAConnection.getGuild().getMemberCache();
+        MemberCacheView cacheView = JdaConnection.getGuild().getMemberCache();
         // Doesn't work as intended rn
         return match.replaceAll(matchResult -> {
             String name = matchResult.group(1).toLowerCase();
@@ -65,7 +65,6 @@ public class MinecraftChatUtils {
             if (members.isEmpty())
                 return matchResult.group();
             if (members.size() == 1) {
-                PluginLogger.info(members.get(0).getAsMention());
                 return members.get(0).getAsMention();
             }
             // Priority to finding a user with exact match
