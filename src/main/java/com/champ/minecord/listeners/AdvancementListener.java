@@ -2,13 +2,14 @@ package com.champ.minecord.listeners;
 
 import com.champ.minecord.Minecord;
 import com.champ.minecord.Settings;
-import com.champ.minecord.discord.DiscordJDAConnection;
+import com.champ.minecord.discord.JdaConnection;
 import com.champ.minecord.utility.ConfigDefaults;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
@@ -22,7 +23,7 @@ public class AdvancementListener implements Listener {
         Minecord.getPlugin().registerListener(this);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerAdvancement(PlayerAdvancementDoneEvent event) {
         Advancement advancement = event.getAdvancement();
         AdvancementDisplay display = advancement.getDisplay();
@@ -35,6 +36,6 @@ public class AdvancementListener implements Listener {
                 name +
                 "has completed the advancement **" +
                 title + "**!";
-        DiscordJDAConnection.sendMessage(builder, event.getPlayer());
+        JdaConnection.sendMessage(builder, event.getPlayer());
     }
 }

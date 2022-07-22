@@ -2,10 +2,11 @@ package com.champ.minecord.listeners;
 
 import com.champ.minecord.Minecord;
 import com.champ.minecord.Settings;
-import com.champ.minecord.discord.DiscordJDAConnection;
+import com.champ.minecord.discord.JdaConnection;
 import com.champ.minecord.utility.ConfigDefaults;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -17,7 +18,7 @@ public class JoinLeaveListener implements Listener {
         Minecord.getPlugin().registerListener(this);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         String playerName = ChatColor.stripColor(event.getPlayer().getDisplayName());
 
@@ -25,10 +26,10 @@ public class JoinLeaveListener implements Listener {
         String message = emoji + " " +
                 playerName +
                 " has joined!";
-        DiscordJDAConnection.sendMessage(message, event.getPlayer());
+        JdaConnection.sendMessage(message, event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerLeave(PlayerQuitEvent event) {
         String playerName = ChatColor.stripColor(event.getPlayer().getDisplayName());
 
@@ -36,13 +37,14 @@ public class JoinLeaveListener implements Listener {
         String message = emoji + " " +
                 playerName +
                 " has left!";
-        DiscordJDAConnection.sendMessage(message, event.getPlayer());
+        JdaConnection.sendMessage(message, event.getPlayer());
     }
-    @EventHandler
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerKick(PlayerKickEvent event) {
         String playerName = ChatColor.stripColor(event.getPlayer().getDisplayName());
-        String message = playerName + " was kicked with reason: "+ event.getReason();
-        DiscordJDAConnection.sendMessage(message, event.getPlayer());
+        String message = playerName + " was kicked with reason: " + event.getReason();
+        JdaConnection.sendMessage(message, event.getPlayer());
     }
 
 }
