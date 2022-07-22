@@ -16,28 +16,30 @@ import org.bukkit.entity.Player;
 
 import javax.security.auth.login.LoginException;
 
-public class DiscordJDAConnection {
+public class JdaConnection {
     private static JDA jda = null;
     private static Guild guild = null;
     private static TextChannel textChannel = null;
     private static WebhookClient webhook = null;
 
     public static void InitiateConnection() {
-        String token = Settings.getBotToken().orElseThrow(() -> {
-            PluginLogger.unrecoverable("Bot Token not found in config.yml, disabling plugin");
-            return new IllegalArgumentException();
-        });
+        String token = Settings.getBotToken().orElseThrow();
         String guildId = Settings.getGuildId().orElseThrow(IllegalArgumentException::new);
         try {
-            DiscordJDAConnection.jda = JDABuilder.create(token,
+            JdaConnection.jda = JDABuilder.create(token,
                             GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                             GatewayIntent.GUILD_MESSAGES,
                             GatewayIntent.GUILD_MEMBERS
                     )
                     .setMemberCachePolicy(member -> member.getGuild().getId().equals(guildId))
-                    .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE,
-                            CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS)
+                    // Disabled all cache except sticker and emoji because they're required by JDA for update events
+                    .disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS,
+                            CacheFlag.MEMBER_OVERRIDES, CacheFlag.ONLINE_STATUS,
+                            CacheFlag.ROLE_TAGS, CacheFlag.VOICE_STATE
+                    )
                     .setActivity(Activity.playing("Minecraft" + (Settings.getShowIp() ? " at " + getHostIp() : "")))
+                    .addEventListeners(new DiscordListener())
+                    .setContextEnabled(false)
                     .build()
                     .awaitReady();
 
@@ -62,7 +64,6 @@ public class DiscordJDAConnection {
             wb.setWait(false); // We don't care about the message returned
             webhook = wb.buildJDA();
         }
-        jda.addEventListener(new MessageListener());
     }
 
     private static String getHostIp() {
@@ -84,7 +85,7 @@ public class DiscordJDAConnection {
         return guild;
     }
 
-    private static void sendWebhookMessage(String msg, Player player) {
+    public static void sendWebhookMessage(String msg, Player player) {
         WebhookMessageBuilder message = new WebhookMessageBuilder()
                 .setContent(msg)
                 .setUsername(player.getName())
@@ -93,6 +94,8 @@ public class DiscordJDAConnection {
     }
 
     public static void sendMessage(String message, Player player) {
+        // Stop trying to send messages if guild becomes unavailable
+        if (DiscordListener.isStopMessages()) return;
         if (Settings.useWebhook())
             sendWebhookMessage(message, player);
         else
