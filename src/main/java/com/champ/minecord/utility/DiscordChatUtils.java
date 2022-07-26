@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class DiscordChatUtils {
     // 256 (exclusive) is the max number of characters allowed in minecraft chat
     public final static short maxMCMessageLength = 256 - 1;
-    private final static Pattern emotePattern = Pattern.compile("<(:\\w+:)(\\d{15,22})>");
+    private final static Pattern emotePattern = Pattern.compile("<a?(:\\w+:)(\\d{15,22})>");
     private final static Pattern mentionPattern = Pattern.compile("<@!?(\\d{15,22})>");
     private final static Pattern roleMentionPattern = Pattern.compile("<@&(\\d{15,22})>");
     private final static Pattern channelMention = Pattern.compile("<#(\\d{15,22})>");
