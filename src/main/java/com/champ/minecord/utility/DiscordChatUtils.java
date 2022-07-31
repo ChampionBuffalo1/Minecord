@@ -72,33 +72,39 @@ public class DiscordChatUtils {
         String withoutRoleMention = removeRole(withoutChannelMention);
         Matcher match = mentionPattern.matcher(withoutRoleMention);
         if (!match.find()) return withoutRoleMention;
-        String id = match.group(1);
-        String toReplaceWith = "@invalid-user";
-        Member member = JdaConnection.getGuild().getMemberById(id);
-        if (member != null)
-            toReplaceWith = "@" + member.getUser().getName();
-        return match.replaceAll(toReplaceWith);
+        return match.replaceAll(matchResult -> {
+            String id = matchResult.group(1);
+            String toReplaceWith = "@invalid-user";
+            Member member = JdaConnection.getGuild().getMemberById(id);
+            if (member != null)
+                toReplaceWith = "@" + member.getUser().getName();
+            return toReplaceWith;
+        });
     }
 
     public static String removeRole(String input) {
         Matcher match = roleMentionPattern.matcher(input);
-        if (!match.find()) return input;
-        String id = match.group(1);
-        String toReplaceWith = "deleted-role";
-        Role role = JdaConnection.getGuild().getRoleById(id);
-        if (role != null)
-            toReplaceWith = "@" + role.getName();
-        return match.replaceAll(toReplaceWith);
+        if (!match.matches()) return input;
+        return match.replaceAll(matchResult -> {
+            String id = matchResult.group(1);
+            String toReplaceWith = "deleted-role";
+            Role role = JdaConnection.getGuild().getRoleById(id);
+            if (role != null)
+                toReplaceWith = "@" + role.getName();
+            return toReplaceWith;
+        });
     }
 
     public static String removeChannel(String input) {
         Matcher match = channelMention.matcher(input);
         if (!match.find()) return input;
-        String id = match.group(1);
-        String toReplaceWith = "#deleted-channel";
-        Channel channel = JdaConnection.getGuild().getChannelById(Channel.class, id);
-        if (channel != null)
-            toReplaceWith = "#" + channel.getName();
-        return match.replaceAll(toReplaceWith);
+        return match.replaceAll(matchResult -> {
+            String id = matchResult.group(1);
+            String toReplaceWith = "#deleted-channel";
+            Channel channel = JdaConnection.getGuild().getChannelById(Channel.class, id);
+            if (channel != null)
+                toReplaceWith = "#" + channel.getName();
+            return toReplaceWith;
+        });
     }
 }
