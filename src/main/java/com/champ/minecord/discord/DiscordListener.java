@@ -93,6 +93,7 @@ public class DiscordListener extends ListenerAdapter {
         EntityCache.updateSticker(event.getSticker().getName(), stickerId);
     }
 
+    // Message
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromType(ChannelType.TEXT) || event.getAuthor().isBot() ||

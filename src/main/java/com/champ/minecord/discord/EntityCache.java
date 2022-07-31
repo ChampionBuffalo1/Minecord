@@ -4,7 +4,6 @@ import com.champ.minecord.utility.PluginLogger;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -71,9 +70,8 @@ public class EntityCache {
      */
     public static void removeStickerById(String stickerId) {
         for (Map.Entry<String, String> entry : stickers.entrySet()) {
-            if (Objects.equals(stickerId, entry.getValue())) {
+            if (stickerId.equals(entry.getValue()))
                 stickers.remove(entry.getKey());
-            }
         }
     }
 

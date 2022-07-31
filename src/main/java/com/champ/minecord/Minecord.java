@@ -34,7 +34,6 @@ public final class Minecord extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
         // Properly Shutdown JDA connection
         if (JdaConnection.getJda() != null) {
             ServerEvents.serverShutdown();

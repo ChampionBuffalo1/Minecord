@@ -26,13 +26,14 @@ public class StickerCommand implements TabExecutor {
             String stickerId = EntityCache.getSticker(stickerName);
             if (stickerId == null) {
                 player.sendMessage(ChatColor.RED + "No sticker found with name: " + stickerName);
-                return true;
+            } else {
+                Message message = new MessageBuilder()
+                        .setContent(ChatColor.stripColor(player.getDisplayName()) + ": ")
+                        .setStickers(StickerSnowflake.fromId(stickerId))
+                        .build();
+                JdaConnection.getTextChannel().sendMessage(message).queue();
+                player.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "Sticker Sent!");
             }
-            Message message = new MessageBuilder()
-                    .setContent(ChatColor.stripColor(player.getDisplayName()) + ": ")
-                    .setStickers(StickerSnowflake.fromId(stickerId))
-                    .build();
-            JdaConnection.getTextChannel().sendMessage(message).queue();
             return true;
         }
         return false;

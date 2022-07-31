@@ -19,9 +19,9 @@ public class ChatEventListener implements Listener {
     public void onChatMessage(AsyncPlayerChatEvent event) {
         Player plyr = event.getPlayer();
         String message = event.getMessage();
-        StringBuilder builder = new StringBuilder(ChatColor.stripColor(plyr.getDisplayName()))
-                .append(": ")
-                .append(message);
+        String builder = ChatColor.stripColor(plyr.getDisplayName()) +
+                ": " +
+                message;
         // Just for a test run
         JdaConnection.sendMessage(MinecraftChatUtils.inject(builder), event.getPlayer());
     }
