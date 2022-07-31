@@ -15,9 +15,6 @@ public class MinecraftChatUtils {
     private final static Pattern simpleChannel = Pattern.compile("#([a-z\\d-]+)");
     private final static Pattern simpleMember = Pattern.compile("@([\\w\\d-]+(#\\d{4})?)");
 
-    public static String inject(StringBuilder builder) {
-        return inject(builder.toString());
-    }
 
     public static String inject(String inputString) {
         String withEmotes = injectEmotes(inputString);
@@ -57,16 +54,15 @@ public class MinecraftChatUtils {
                     .parallelStream()
                     // Removing all members whose name's length is less than what was provided for search
                     // Removing anyone whose name doesn't startsWith the name we are looking for
-                    .filter(member -> (isWithTag ?
-                            member.getUser().getAsTag().length() >= name.length() :
-                            member.getUser().getName().length() >= name.length()
-                    ) && member.getUser().getName().toLowerCase().startsWith(name))
+                    .filter(member -> isWithTag ?
+                            member.getUser().getAsTag().length() >= name.length() &&
+                                    member.getUser().getAsTag().toLowerCase().startsWith(name)
+                            : member.getUser().getName().length() >= name.length() &&
+                            member.getUser().getName().toLowerCase().startsWith(name)
+                    )
                     .toList();
-            if (members.isEmpty())
-                return matchResult.group();
-            if (members.size() == 1) {
+            if (members.size() == 1)
                 return members.get(0).getAsMention();
-            }
             // Priority to finding a user with exact match
             // If no exact match is found then we try to find a user with username Starting with the query(?)
             for (Member m : members) {
@@ -78,10 +74,7 @@ public class MinecraftChatUtils {
                 if (m.getUser().getName().toLowerCase().startsWith(name))
                     return m.getAsMention();
             }
-            PluginLogger.severe("Unexpected error in trying to find user, identify dev");
-            // Since we are filtering users and returning if no user could be determined we should, In theory never actually return null
-            // Matcher#replaceAll() will throw an error if we ever actually return null
-            return null;
+            return matchResult.group();
         });
     }
 }
