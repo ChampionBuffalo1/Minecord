@@ -84,7 +84,7 @@ public class DiscordChatUtils {
 
     public static String removeRole(String input) {
         Matcher match = roleMentionPattern.matcher(input);
-        if (!match.matches()) return input;
+        if (!match.find()) return input;
         return match.replaceAll(matchResult -> {
             String id = matchResult.group(1);
             String toReplaceWith = "deleted-role";
