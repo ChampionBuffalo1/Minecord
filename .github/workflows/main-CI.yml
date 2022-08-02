@@ -5,8 +5,7 @@ on:
     branches: [ main ]
 
 env: 
-  JAR_NAME: minecord-$JAR_VERSION.jar
-  JAR_VERSION: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout"
+  JAR_NAME: echo "minecord-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar"
 
 jobs:
   release:
