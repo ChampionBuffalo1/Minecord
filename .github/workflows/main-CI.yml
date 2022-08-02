@@ -3,6 +3,8 @@ name: Maven Build and Release CI
 on:
   push:
     branches: [ main ]
+env:
+  JAR_NAME: `minecord-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar`
 
 jobs:
   build:
@@ -20,18 +22,16 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
-      with:
-        java-version: '16'
-        distribution: 'adopt'
-  - run: mvn -B -U package
-  # This is gonna break whenever someone changes version number
-  # But thats a problem for future me so who cares
-  - run: mkdir staging && cp target/minecord-0.1.jar staging
-  - uses: actions/upload-artifact@v3
-    with:
-      name: Package
-      path: staging
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+      - run: mvn -B -U package
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.JAR_NAME }}
+          path: staging/${{ env.JAR_NAME }}
