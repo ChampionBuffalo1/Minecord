@@ -4,9 +4,6 @@ on:
   push:
     branches: [ main ]
 
-env: 
-  JAR_NAME: echo "minecord-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar"
-
 jobs:
   release:
     runs-on: ubuntu-latest
