@@ -20,14 +20,18 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
-        with:
-          java-version: '16'
-          distribution: 'adopt'
-      - name: "Releasing UberJar to Github"
-        run: mvn -B clean deploy -DskipTests
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        java-version: '16'
+        distribution: 'adopt'
+  - run: mvn -B -U package
+  # This is gonna break whenever someone changes version number
+  # But thats a problem for future me so who cares
+  - run: mkdir staging && cp target/minecord-0.1.jar staging
+  - uses: actions/upload-artifact@v3
+    with:
+      name: Package
+      path: staging
