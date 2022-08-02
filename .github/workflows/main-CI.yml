@@ -3,8 +3,9 @@ name: Maven Build and Release CI
 on:
   push:
     branches: [ main ]
+
 env:
-  JAR_NAME: `minecord-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar`
+  JAR_NAME: "minecord-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar"
 
 jobs:
   build:
