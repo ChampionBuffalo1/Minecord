@@ -23,7 +23,7 @@ jobs:
       - name: Releasing the jar artifact
         run: mkdir staging && cp target/*.jar staging
       - name: Getting Artifact name
-        run: echo "::set-env name=JAR_NAME::minecord-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar"
+        run: echo "JAR_NAME=minecord-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ env.JAR_NAME }}
