@@ -34,7 +34,7 @@ public class AdvancementListener implements Listener {
         String builder = emote +
                 " " +
                 name +
-                "has completed the advancement **" +
+                " has completed the advancement **" +
                 title + "**!";
         JdaConnection.sendMessage(builder, event.getPlayer());
     }
