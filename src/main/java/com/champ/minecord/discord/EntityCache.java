@@ -21,7 +21,8 @@ public class EntityCache {
                 );
         guild.retrieveStickers()
                 .queue(stickerList -> stickerList
-                        .forEach(sticker -> stickers.put(sticker.getName(), sticker.getId()))
+                        .forEach(sticker ->
+                                stickers.put(sticker.getName().trim(), sticker.getId()))
                 );
     }
 
@@ -100,6 +101,8 @@ public class EntityCache {
      * @return StickerId
      */
     public static String getSticker(String stickerName) {
-        return stickers.get(stickerName);
+        String s = stickers.get(stickerName);
+        PluginLogger.info(stickerName + ": " + s);
+        return s;
     }
 }
