@@ -35,7 +35,7 @@ public class Settings {
 
     public static Optional<String> getEmote(String path) {
         String emote = config.getString(path);
-        if (commonErrors(emote) || !emote.matches("<:\\w+:\\d{15,22}>"))
+        if (commonErrors(emote) || !emote.matches("<a?:\\w+:\\d{15,22}>"))
             return Optional.empty();
         return Optional.of(emote);
     }
