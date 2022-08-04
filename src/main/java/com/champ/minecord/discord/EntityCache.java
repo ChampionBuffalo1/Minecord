@@ -101,8 +101,6 @@ public class EntityCache {
      * @return StickerId
      */
     public static String getSticker(String stickerName) {
-        String s = stickers.get(stickerName);
-        PluginLogger.info(stickerName + ": " + s);
-        return s;
+        return stickers.get(stickerName);
     }
 }
