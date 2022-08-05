@@ -6,7 +6,6 @@ import com.champ.minecord.discord.JdaConnection;
 import com.champ.minecord.utility.ConfigDefaults;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.ChatColor;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,7 +28,7 @@ public class AdvancementListener implements Listener {
         AdvancementDisplay display = advancement.getDisplay();
         if (display == null) return;
         String title = PlainTextComponentSerializer.plainText().serialize(display.title());
-        String name = ChatColor.stripColor(event.getPlayer().getDisplayName());
+        String name = event.getPlayer().getDisplayName();
         String emote = Settings.getEmote("emojis.advancement").orElse(ConfigDefaults.ADVANCEMENT_EMOJI.getDefault());
         String builder = emote +
                 " " +

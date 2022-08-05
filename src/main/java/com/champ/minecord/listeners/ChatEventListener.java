@@ -3,7 +3,6 @@ package com.champ.minecord.listeners;
 import com.champ.minecord.Minecord;
 import com.champ.minecord.discord.JdaConnection;
 import com.champ.minecord.utility.MinecraftChatUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,7 +18,7 @@ public class ChatEventListener implements Listener {
     public void onChatMessage(AsyncPlayerChatEvent event) {
         Player plyr = event.getPlayer();
         String message = event.getMessage();
-        String builder = ChatColor.stripColor(plyr.getDisplayName()) +
+        String builder = plyr.getDisplayName() +
                 ": " +
                 message;
         // Just for a test run

@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import javax.security.auth.login.LoginException;
@@ -96,6 +97,7 @@ public class JdaConnection {
     public static void sendMessage(String message, Player player) {
         // Stop trying to send messages if guild becomes unavailable
         if (DiscordListener.isStopMessages()) return;
+        message = ChatColor.stripColor(message);
         if (Settings.useWebhook())
             sendWebhookMessage(message, player);
         else
