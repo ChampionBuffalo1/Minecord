@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.events.sticker.GuildStickerAddedEvent;
 import net.dv8tion.jda.api.events.sticker.GuildStickerRemovedEvent;
 import net.dv8tion.jda.api.events.sticker.update.GuildStickerUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -35,20 +38,22 @@ public class DiscordListener extends ListenerAdapter {
     @Override
     public void onGuildUnavailable(GuildUnavailableEvent event) {
         if (!isFromGuild(event.getGuild().getId())) return;
-        broadcast(
-                ChatColor.GOLD + "[" + ChatColor.DARK_RED + "Server" + ChatColor.RESET + ChatColor.GOLD + "]: "
-                        + "Discord Server became unavailable. Messages won't be received or sent to the channel anymore"
-        );
+        final TextComponent component = Component.text()
+                .color(NamedTextColor.GOLD)
+                .append(Component.text("[Server]: Discord Server became unavailable. Messages won't be received or sent to the channel anymore"))
+                .build();
+        broadcast(component);
         DiscordListener.setStopMessages(true);
     }
 
     @Override
     public void onGuildAvailable(GuildAvailableEvent event) {
         if (!isFromGuild(event.getGuild().getId())) return;
-        broadcast(
-                ChatColor.GOLD + "[" + ChatColor.RED + "Server" + ChatColor.RESET + ChatColor.GOLD + "]: " +
-                        "Discord server is now available and the message interchange can continue as before."
-        );
+        final TextComponent component = Component.text()
+                .color(NamedTextColor.GOLD)
+                .append(Component.text("[Server]: Discord server is now available and the message interchange can continue as before."))
+                .build();
+        broadcast(component);
         DiscordListener.setStopMessages(false);
     }
 
@@ -109,10 +114,10 @@ public class DiscordListener extends ListenerAdapter {
                 ChatColor.GRAY + ": " + ChatColor.WHITE + message;
         if (str.length() >= DiscordChatUtils.maxMCMessageLength + 1) // 256 is the server chat's character limit
             str = str.substring(0, DiscordChatUtils.maxMCMessageLength + 1);
-        broadcast(str);
+        broadcast(Component.text().content(str).build());
     }
 
-    private void broadcast(String message) {
-        Bukkit.getServer().broadcastMessage(message);
+    private void broadcast(TextComponent text) {
+        Bukkit.getServer().sendMessage(text);
     }
 }

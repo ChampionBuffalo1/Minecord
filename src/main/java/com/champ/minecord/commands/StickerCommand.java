@@ -3,6 +3,7 @@ package com.champ.minecord.commands;
 import com.champ.minecord.Minecord;
 import com.champ.minecord.discord.EntityCache;
 import com.champ.minecord.discord.JdaConnection;
+import com.champ.minecord.utility.Utils;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.sticker.StickerSnowflake;
@@ -28,7 +29,7 @@ public class StickerCommand implements TabExecutor {
                 player.sendMessage(ChatColor.RED + "No sticker found with name: " + stickerName);
             } else {
                 Message message = new MessageBuilder()
-                        .setContent(ChatColor.stripColor(player.getDisplayName()) + ": ")
+                        .setContent(Utils.toPlainText(player.displayName()) + ": ")
                         .setStickers(StickerSnowflake.fromId(stickerId))
                         .build();
                 JdaConnection.getTextChannel().sendMessage(message).queue();

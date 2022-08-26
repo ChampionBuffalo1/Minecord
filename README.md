@@ -1,4 +1,3 @@
-
 # Minecord
 
 Minecord is a simple Minecraft plugin that connects a Minecraft server's in-game chat with a Discord channel so that the
@@ -19,6 +18,7 @@ mvn clean install
 Minecord outputs the plugin as a [UberJar](https://imagej.net/develop/uber-jars)
 
 ## Privileged Intents
+
 The plugin requires `Server Members` and `Message Content` Intents to be enabled from
 [Discord Developer Portal](https://discord.com/developers/applications).
 
@@ -26,8 +26,3 @@ The plugin requires `Server Members` and `Message Content` Intents to be enabled
 
 * [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)
 * [PaperMC API](https://jd.papermc.io/paper/1.19/)
-
-## Deprecation warnings
-
-The Deprecation warnings can be ignored because removing them will mean that the plugin will
-run into errors because it's specifically made for servers using Paper.
